@@ -44,6 +44,20 @@ RUN git clone --branch 4.2.0 https://github.com/borglab/gtsam.git && \
     cmake .. && \
     make install
 
+WORKDIR /geo_ws/src
+
+# Install Geodesy
+RUN git clone --branch 1.0.6 https://github.com/ros-geographic-info/geographic_info.git 
+
+# Install Angles
+RUN git clone --branch ros2 https://github.com/ros/angles.git
+
+WORKDIR /
+    
 RUN echo "source /opt/ros/humble/setup.zsh" >> ~/.zshrc 
 
+COPY ./entrypoint.sh /entrypoint.sh
+RUN sudo chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
 CMD [ "zsh" ]

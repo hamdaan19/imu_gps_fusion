@@ -7,9 +7,18 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(Boost REQUIRED COMPONENTS program_options)
+find_package(GTSAM REQUIRED QUIET)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+
+include_directories(
+    include
+    ${PROJECT_SOURCE_DIR}/include
+    ${Boost_INCLUDE_DIRS}
+    ${GTSAM_INCLUDE_DIR}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -22,5 +31,24 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+# Adding executable
+add_executable(
+  geodesy
+  src/geodesy.cpp
+)
+
+ament_target_dependencies(
+  geodesy
+  rclcpp
+  std_msgs
+  sensor_msgs
+  Boost
+)
+
+install(
+  TARGETS geodesy
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 ament_package()
